@@ -1,0 +1,245 @@
+/* Apply Arial font globally */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+/* Map container styling */
+#map {
+    height: 65vh;
+    width: 100%;
+    position: relative;
+    /* Allow for absolute positioning of overlay */
+}
+
+/* Spinner overlay styling */
+.spinner-overlay {
+    position: absolute;
+    /* Cover the map */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    /* Light overlay for better visibility */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    /* Ensure it appears above the map */
+}
+
+/* Spinner animation */
+.spinner {
+    border: 6px solid #f3f3f3;
+    /* Light grey */
+    border-top: 6px solid #3498db;
+    /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+/* Keyframes for spinner animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mouse position styling */
+.mouse-position {
+    background: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1000;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    /* Prevent line breaks */
+}
+
+/* Leaflet control info styling */
+.leaflet-control-info {
+    background: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    position: absolute;
+    top: 10px;
+    /* Align with zoom controls */
+    left: 50px;
+    /* Adjust to position next to zoom controls */
+    z-index: 1000;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    /* Prevent line breaks */
+    overflow: hidden;
+    /* Hide overflow content */
+    text-overflow: ellipsis;
+    /* Add ellipsis if content overflows */
+}
+
+/* Custom icon styling */
+.custom-icon {
+    opacity: 0.9;
+}
+
+/* Filter controls styling */
+.filter-controls {
+    margin: 10px 0;
+    /* Reduce the vertical margin for closer proximity to the map */
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    /* Stack elements vertically */
+    align-items: flex-start;
+    /* Align items to the start */
+}
+
+/* Heading styling */
+.filter-controls h4 {
+    margin: 0 0 10px 0;
+    /* Remove default margin and add bottom margin */
+    font-size: 1.5em;
+    /* Adjust font size for better prominence */
+    color: #333;
+    /* Darker color for better readability */
+    font-weight: bold;
+    /* Make the heading bold */
+}
+
+/* Form controls in one line */
+.form-controls {
+    display: flex;
+    /* Use flexbox to arrange items in a row */
+    align-items: center;
+    /* Vertically center items */
+    gap: 10px;
+    /* Add space between items */
+    flex-wrap: wrap;
+    /* Allow items to wrap if necessary */
+}
+
+/* Filter controls labels and inputs styling */
+.filter-controls label {
+    margin: 0;
+    /* Remove default margin */
+    font-size: 14px;
+}
+
+.filter-controls input {
+    width: 80px;
+    /* Adjust the width as needed */
+    padding: 2px 4px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: inline-block;
+    /* Align input fields horizontally */
+}
+
+.filter-controls button {
+    padding: 4px 8px;
+    /* Adjust button padding for better alignment */
+    font-size: 14px;
+}
+
+/* Info legend styling */
+.info.legend {
+    line-height: 1.5;
+    color: #555;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+}
+
+.info.legend i {
+    margin-right: 5px;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+}
+
+/* Spinner container styling */
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 75vh;
+    /* Match the map height */
+}
+
+.spinner-container p {
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.table-container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+.pagination {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.pagination button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Add this rule to change the cursor to a hand symbol on row hover */
+.table-container table tbody tr {
+    cursor: pointer;
+    /* Changes the cursor to a hand symbol */
+}
+
+/* Optionally, you can add some hover effects for better user experience */
+.table-container table tbody tr:hover {
+    background-color: #f0f0f0;
+    /* Light gray background on hover */
+}
