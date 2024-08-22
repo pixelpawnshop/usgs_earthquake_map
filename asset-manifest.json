@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/usgs_earthquake_map/static/css/main.19b56eba.css",
+    "main.js": "/usgs_earthquake_map/static/js/main.b462bdbe.js",
+    "index.html": "/usgs_earthquake_map/index.html",
+    "main.19b56eba.css.map": "/usgs_earthquake_map/static/css/main.19b56eba.css.map",
+    "main.b462bdbe.js.map": "/usgs_earthquake_map/static/js/main.b462bdbe.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.19b56eba.css",
+    "static/js/main.b462bdbe.js"
+  ]
+}
