@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/usgs_earthquake_map/static/css/main.19b56eba.css",
-    "main.js": "/usgs_earthquake_map/static/js/main.b462bdbe.js",
+    "main.css": "/usgs_earthquake_map/static/css/main.f483a95d.css",
+    "main.js": "/usgs_earthquake_map/static/js/main.abad35cc.js",
     "index.html": "/usgs_earthquake_map/index.html",
-    "main.19b56eba.css.map": "/usgs_earthquake_map/static/css/main.19b56eba.css.map",
-    "main.b462bdbe.js.map": "/usgs_earthquake_map/static/js/main.b462bdbe.js.map"
+    "main.f483a95d.css.map": "/usgs_earthquake_map/static/css/main.f483a95d.css.map",
+    "main.abad35cc.js.map": "/usgs_earthquake_map/static/js/main.abad35cc.js.map"
   },
   "entrypoints": [
-    "static/css/main.19b56eba.css",
-    "static/js/main.b462bdbe.js"
+    "static/css/main.f483a95d.css",
+    "static/js/main.abad35cc.js"
   ]
 }
