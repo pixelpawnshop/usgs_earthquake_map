@@ -39,5 +39,8 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://pixelpawnshop.github.io/usgs_earthquake_map"
+  "homepage": "https://pixelpawnshop.github.io/usgs_earthquake_map",
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
+  }
 }

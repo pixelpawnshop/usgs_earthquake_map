@@ -39,7 +39,7 @@ function App() {
 
   const handleRowClick = (event) => {
     if (mapRef.current) {
-      mapRef.current.setView([event.lat, event.long], 6); // Adjust the zoom level as needed
+      mapRef.current.setView([event.lat, event.long], 18); // Adjust the zoom level as needed
     }
   };
 
