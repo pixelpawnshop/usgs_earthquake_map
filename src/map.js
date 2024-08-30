@@ -3,7 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
-import { createLegend,getMarkerStyle } from './functions';
+import { createLegend, getMarkerStyle } from './functions';
 
 export function initializeMap(mapId, setEarthquakes, setIsLoading, setMarkerClusterGroupRef, setHeatLayerRef) {
   const map = L.map(mapId, {
@@ -128,6 +128,18 @@ export function initializeMap(mapId, setEarthquakes, setIsLoading, setMarkerClus
       if (!map._controlLayers) {
         L.control.layers(baseMaps, overlayMaps, { position: 'topright' }).addTo(map);
       }
+
+      // Add the reload button
+      const reloadButton = L.control({ position: 'topright' });
+
+      reloadButton.onAdd = function () {
+        const div = L.DomUtil.create('div', 'reload-button');
+        div.innerHTML = '<button onclick="window.location.reload()">Update</button>';
+        return div;
+      };
+
+      reloadButton.addTo(map);
+
     })
     .catch(error => {
       console.error('Error fetching data', error);

@@ -38,43 +38,47 @@ export function getMarkerStyle(magnitude, depth) {
 }
 
 // Function to filter earthquakes and update markers and heatmap
+// Function to filter earthquakes and update markers and heatmap
 export function filterEarthquakes(
-  earthquakes, 
-  minMagnitude, 
-  maxMagnitude, 
-  minDepth, 
-  maxDepth, 
-  markerClusterGroupRef, 
+  earthquakes,
+  minMagnitude,
+  maxMagnitude,
+  minDepth,
+  maxDepth,
+  startDate,
+  endDate,
+  markerClusterGroupRef,
   heatLayerRef
 ) {
-  // Convert depth values to numbers if they are not empty
+  const minMagnitudeNum = minMagnitude ? parseFloat(minMagnitude) : -Infinity;
+  const maxMagnitudeNum = maxMagnitude ? parseFloat(maxMagnitude) : Infinity;
   const minDepthNum = minDepth ? parseFloat(minDepth) : -Infinity;
   const maxDepthNum = maxDepth ? parseFloat(maxDepth) : Infinity;
+  const start = startDate ? new Date(startDate).getTime() : -Infinity;
+  const end = endDate ? new Date(endDate).getTime() : Infinity;
 
-  // Filter earthquakes based on magnitude and depth
+  // Filter earthquakes based on criteria
   const filtered = earthquakes.filter(eq =>
-    (minMagnitude ? eq.magnitude >= parseFloat(minMagnitude) : true) &&
-    (maxMagnitude ? eq.magnitude <= parseFloat(maxMagnitude) : true) &&
+    (minMagnitude ? eq.magnitude >= minMagnitudeNum : true) &&
+    (maxMagnitude ? eq.magnitude <= maxMagnitudeNum : true) &&
     (minDepth ? eq.depth >= minDepthNum : true) &&
-    (maxDepth ? eq.depth <= maxDepthNum : true)
+    (maxDepth ? eq.depth <= maxDepthNum : true) &&
+    (startDate ? new Date(eq.time).getTime() >= start : true) &&
+    (endDate ? new Date(eq.time).getTime() <= end : true)
   );
 
   console.log('Filtered earthquakes:', filtered); // Debug log
 
+  // Update markers and heatmap
   if (markerClusterGroupRef.current) {
-    // Clear existing markers
     markerClusterGroupRef.current.clearLayers();
-
-    // Clear previous heatmap data
     if (heatLayerRef.current) {
       heatLayerRef.current.setLatLngs([]);
     }
 
-    // Prepare data for heatmap
     const heatmapData = [];
 
     filtered.forEach(eq => {
-      // Update markers
       const style = getMarkerStyle(eq.magnitude, eq.depth);
       const marker = L.marker([eq.lat, eq.long], {
         icon: L.divIcon({
@@ -98,19 +102,30 @@ export function filterEarthquakes(
         })}`
       );
 
-      markerClusterGroupRef.current.addLayer(marker); // Add marker to cluster group
+      marker.on('mouseover', function () {
+        const hoverDiv = document.querySelector('.leaflet-control-info');
+        hoverDiv.style.display = 'block';
+        hoverDiv.innerHTML = `<b>${eq.magnitude} ${eq.title}</b>`;
+      })
+        .on('mouseout', function () {
+          const hoverDiv = document.querySelector('.leaflet-control-info');
+          hoverDiv.style.display = 'none';
+        });
 
-      // Add to heatmap data
+      markerClusterGroupRef.current.addLayer(marker);
       heatmapData.push([eq.lat, eq.long, eq.magnitude]);
     });
 
-    // Update heatmap layer with new data
     if (heatLayerRef.current) {
       heatLayerRef.current.setLatLngs(heatmapData);
       console.log('Updated heatmap data:', heatmapData); // Debug log
     }
   }
+
+  // Return the filtered earthquakes
+  return filtered;
 }
+
 
 export function createLegend() {
   const legend = L.control({ position: 'bottomright' });
