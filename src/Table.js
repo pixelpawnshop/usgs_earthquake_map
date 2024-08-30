@@ -48,7 +48,7 @@ const Table = ({ earthquakes, onRowClick }) => {
         <thead>
           <tr>
             <th className="sortable" onClick={() => handleSort('magnitude')}>
-              Magnitude {sortConfig.key === 'magnitude' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
+              Mag {sortConfig.key === 'magnitude' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
             </th>
             <th>Time</th>
             <th>Title</th>

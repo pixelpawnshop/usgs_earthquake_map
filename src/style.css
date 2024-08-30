@@ -49,7 +49,6 @@ body {
     0% {
         transform: rotate(0deg);
     }
-
     100% {
         transform: rotate(360deg);
     }
@@ -96,67 +95,126 @@ body {
     opacity: 0.9;
 }
 
-/* Filter controls styling */
+/* Flex container for layout */
+.filter-table-container {
+    display: flex;
+    gap: 20px; /* Space between filter and table */
+    padding: 10px; /* Padding around the container */
+    align-items: flex-start; /* Align items to the top */
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+
+/* Adjust filter controls width */
 .filter-controls {
+    flex: 1; /* Takes up space proportionally */
+    max-width: 300px; /* Set a max width for the filter section */
+}
+
+/* Adjust table container width */
+.table-container {
+    flex: 2; /* Takes up space proportionally, twice as much as filter section */
+    max-width: calc(100% - 340px); /* Adjust max width to fit remaining space, including gap */
+    padding: 5px; /* Add padding to match the filter section */
     margin: 10px 0;
-    /* Reduce the vertical margin for closer proximity to the map */
     background: #f9f9f9;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    /* Stack elements vertically */
     align-items: flex-start;
-    /* Align items to the start */
+}
+
+/* Ensure table takes full width of its container */
+.table-container table {
+    width: 100%;
+}
+
+/* Additional styling for responsiveness */
+@media (max-width: 768px) {
+    .filter-table-container {
+        flex-direction: column; /* Stack vertically on smaller screens */
+    }
+
+    .filter-controls, .table-container {
+        max-width: 100%; /* Remove max-width restrictions */
+    }
+}
+
+/* Filter controls styling */
+.filter-controls {
+    margin: 10px 0;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 /* Heading styling */
 .filter-controls h4 {
-    margin: 0 0 10px 0;
-    /* Remove default margin and add bottom margin */
+    margin: 0 0 8px 0; /* Reduced margin */
     font-size: 1.5em;
-    /* Adjust font size for better prominence */
     color: #333;
-    /* Darker color for better readability */
     font-weight: bold;
-    /* Make the heading bold */
 }
 
-/* Form controls in one line */
-.form-controls {
+/* Filter section styling */
+.filter-section {
+    margin-bottom: 8px; /* Reduced margin */
+}
+
+.filter-section h5 {
+    margin: 0 0 4px 0; /* Reduced margin */
+    font-size: 1.2em;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-section h5:hover {
+    background-color: #e6e6e6;
+    /* Light gray background on hover */
+}
+
+/* Input group styling */
+.input-group {
     display: flex;
-    /* Use flexbox to arrange items in a row */
-    align-items: center;
-    /* Vertically center items */
-    gap: 10px;
-    /* Add space between items */
-    flex-wrap: wrap;
-    /* Allow items to wrap if necessary */
+    gap: 8px; /* Reduced gap */
+    /* Space between min and max input fields */
 }
 
 /* Filter controls labels and inputs styling */
-.filter-controls label {
-    margin: 0;
-    /* Remove default margin */
-    font-size: 14px;
-}
-
 .filter-controls input {
     width: 80px;
-    /* Adjust the width as needed */
     padding: 2px 4px;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 4px;
     display: inline-block;
-    /* Align input fields horizontally */
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, cursor 0.3s ease;
 }
 
+/* Change cursor to hand symbol on hover */
+.filter-controls input:hover {
+    cursor: pointer;
+    background-color: #e6e6e6; /* Light grey background on hover */
+}
+
+/* Apply button styling */
 .filter-controls button {
-    padding: 4px 8px;
-    /* Adjust button padding for better alignment */
+    padding: 6px 12px; /* Adjusted padding */
     font-size: 14px;
+    margin-top: 8px; /* Reduced margin */
+    transition: background-color 0.3s ease;
+}
+
+.filter-controls button:hover {
+    cursor: pointer;
+    background-color: #d4d4d4; /* Slightly darker grey background on hover */
 }
 
 /* Info legend styling */
@@ -200,6 +258,7 @@ body {
     margin: auto;
 }
 
+/* Table styling */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -247,10 +306,39 @@ th {
 .sortable {
     cursor: pointer;
     transition: background-color 0.3s ease;
-  }
-  
-  .sortable:hover {
+}
+
+.sortable:hover {
     background-color: #a1a0a0;
-  }
-  
-  
+}
+
+/* Style the apply filter button similarly */
+.filter-controls button:hover {
+    cursor: pointer;
+    background-color: #d4d4d4; /* Slightly darker grey background on hover */
+}
+
+/* Styling for the reload button */
+.reload-button {
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    margin: 5px;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.reload-button button {
+    background-color: #3498db; /* Blue background */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.reload-button button:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+}
