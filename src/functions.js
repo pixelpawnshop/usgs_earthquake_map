@@ -1,5 +1,6 @@
 import L from 'leaflet';
 
+
 // Function to get marker style based on magnitude and depth
 export function getMarkerStyle(magnitude, depth) {
   let color;
