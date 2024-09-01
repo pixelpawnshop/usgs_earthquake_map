@@ -17,4 +17,7 @@ This application visualizes earthquake data provided by the [USGS Earthquake Fee
 ### Filtering Options
 - View events within a specific magnitude range to focus on earthquakes of interest.
 
+### Risk Management
+- Draw polygons around earthquakes of interest to count buildings within the area for risk management.
+
 Explore the seismic activity around the globe with enhanced control and customization!
