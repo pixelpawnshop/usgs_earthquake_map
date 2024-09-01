@@ -46,7 +46,7 @@ export function initializeMap(mapId, setEarthquakes, setIsLoading, setMarkerClus
   setMarkerClusterGroupRef(markerClusterGroup);
   setHeatLayerRef(heatLayer);
 
-  fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
+  fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson')
     .then(response => response.json())
     .then(data => {
       const earthquakeData = data.features.map(feature => {
