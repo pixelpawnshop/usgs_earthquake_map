@@ -105,4 +105,5 @@ const Table = ({ earthquakes, onRowClick }) => {
   );
 };
 
+
 export default Table;
