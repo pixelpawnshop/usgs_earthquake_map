@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { initializeMap } from './map';
 import Table from './Table';
 import './style.css';
-import { filterEarthquakes } from './functions';
-import L from 'leaflet'; // Import Leaflet
+import { filterEarthquakes, fetchBuildingsInPolygon } from './functions';
+import L from 'leaflet';
+import 'leaflet-draw/dist/leaflet.draw.css';
+import 'leaflet-draw';
 
 function App() {
   const [earthquakes, setEarthquakes] = useState([]);
@@ -15,7 +17,6 @@ function App() {
   const [maxDepth, setMaxDepth] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [bufferRadius, setBufferRadius] = useState(''); // Buffer radius state
   const markerClusterGroupRef = useRef(null);
   const heatLayerRef = useRef(null);
   const mapRef = useRef(null);
@@ -29,6 +30,50 @@ function App() {
       (ref) => heatLayerRef.current = ref
     );
 
+    // Add drawing controls
+    const drawnItems = new L.FeatureGroup();
+    mapRef.current.addLayer(drawnItems);
+
+    const drawControl = new L.Control.Draw({
+      edit: {
+        featureGroup: drawnItems,
+      },
+      draw: {
+        polygon: true,
+        marker: false,
+        polyline: false,
+        rectangle: false,
+        circle: false,
+        circlemarker: false,
+      },
+    });
+    mapRef.current.addControl(drawControl);
+
+    // Event listener for when a polygon is drawn
+    mapRef.current.on(L.Draw.Event.CREATED, async (e) => {
+      const type = e.layerType;
+      const layer = e.layer;
+
+      if (type === 'polygon') {
+        const latlngs = layer.getLatLngs()[0].map((latlng) => [latlng.lat, latlng.lng]);
+        console.log('Polygon coordinates:', latlngs); // Log coordinates
+
+        try {
+          console.log('Calling fetchBuildingsInPolygon...');
+          const buildings = await fetchBuildingsInPolygon(latlngs);
+          const buildingCount = buildings.elements.filter(element => element.type === 'way' && element.tags && element.tags.building).length;
+          console.log('Number of buildings found:', buildingCount); // Log number of buildings
+
+          layer.bindPopup(`Buildings within AOI: ${buildingCount}`).openPopup();
+        } catch (error) {
+          console.error('Error occurred while fetching building data:', error);
+          layer.bindPopup('Error fetching building data').openPopup();
+        }
+      }
+
+      drawnItems.addLayer(layer);
+    });
+
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
@@ -37,40 +82,25 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Initialize `filteredEarthquakes` with `earthquakes` data when `earthquakes` is set
     setFilteredEarthquakes(earthquakes);
   }, [earthquakes]);
 
   const applyFilter = () => {
     if (earthquakes.length) {
       const filtered = filterEarthquakes(
-        earthquakes, 
-        minMagnitude, 
-        maxMagnitude, 
-        minDepth, 
-        maxDepth, 
-        startDate, 
-        endDate, 
-        markerClusterGroupRef, 
+        earthquakes,
+        minMagnitude,
+        maxMagnitude,
+        minDepth,
+        maxDepth,
+        startDate,
+        endDate,
+        markerClusterGroupRef,
         heatLayerRef
       );
       setFilteredEarthquakes(filtered);
     }
   };
-
-  const applyBuffer = () => {
-    if (mapRef.current && bufferRadius) {
-      const radiusInMeters = bufferRadius * 1000; // Convert km to meters
-      earthquakes.forEach(eq => {
-        L.circle([eq.lat, eq.long], {
-          radius: radiusInMeters,
-          color: 'blue',
-          fillColor: 'blue',
-          fillOpacity: 0.2
-        }).addTo(mapRef.current);
-      });
-    }
-  };  
 
   const handleRowClick = (event) => {
     if (mapRef.current) {
@@ -140,17 +170,6 @@ function App() {
                 placeholder="To"
               />
             </div>
-          </div>
-          <div className="filter-section">
-            <h5>Buffer Radius (km)</h5>
-            <input
-              type="number"
-              step="0.1"
-              value={bufferRadius}
-              onChange={(e) => setBufferRadius(e.target.value)}
-              placeholder="Radius"
-            />
-            <button onClick={applyBuffer}>Apply Buffer</button>
           </div>
           <button onClick={applyFilter}>Apply Filter</button>
         </div>
