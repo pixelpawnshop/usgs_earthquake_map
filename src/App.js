@@ -34,6 +34,7 @@ function App() {
     const drawnItems = new L.FeatureGroup();
     mapRef.current.addLayer(drawnItems);
 
+    // Create and add the default draw control
     const drawControl = new L.Control.Draw({
       edit: {
         featureGroup: drawnItems,
@@ -48,6 +49,18 @@ function App() {
       },
     });
     mapRef.current.addControl(drawControl);
+
+    // Update tooltip text directly after adding the control
+    const updateTooltips = () => {
+      // Find the tooltip for the polygon draw button
+      const polygonButton = document.querySelector('.leaflet-draw-draw-polygon');
+      if (polygonButton) {
+        polygonButton.title = 'Draw polygon to count number of buildings in AOI'; // Update tooltip text
+      }
+    };
+
+    // Call updateTooltips when the control is added
+    updateTooltips();
 
     // Event listener for when a polygon is drawn
     mapRef.current.on(L.Draw.Event.CREATED, async (e) => {
