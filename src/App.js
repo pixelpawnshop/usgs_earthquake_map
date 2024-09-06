@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { initializeMap, openMarkerPopup } from './map';
+import Popup from './popup';
 import Table from './Table';
 import './style.css';
 import { filterEarthquakes } from './functions';
@@ -21,6 +22,7 @@ function App() {
   const markerClusterGroupRef = useRef(null);
   const heatLayerRef = useRef(null);
   const mapRef = useRef(null);
+  const [showPopup, setShowPopup] = useState(true); // State for popup visibility
 
   useEffect(() => {
     mapRef.current = initializeMap(
@@ -100,15 +102,16 @@ function App() {
     }
     // Scroll to the top of the page
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
     openMarkerPopup(event.id); // Ensure the event has a unique ID or marker ID to open the popup
-
   };
-  
 
+  const handleClosePopup = () => {
+    setShowPopup(false); // Close the popup
+  };
   return (
     <div>
       <div id="map"></div>
+      <Popup isVisible={showPopup} onClose={handleClosePopup} /> {/* Popup component */}
       <div className="filter-table-container">
         <div className="filter-controls">
           <h4>
@@ -184,7 +187,7 @@ function App() {
         )}
       </div>
     </div>
-  );
+  );  
 }
 
 export default App;

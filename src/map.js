@@ -114,7 +114,7 @@ export function initializeMap(mapId, setEarthquakes, setIsLoading, setMarkerClus
         markerClusterGroup.addLayer(marker);
       });      
 
-      fetch('https://pixelpawnshop.github.io/earthquake_map/plates_boundaries.geojson')
+      fetch('https://raw.githubusercontent.com/pixelpawnshop/usgs_earthquake_map/main/src/plates_boundaries.geojson')
         .then(response => response.json())
         .then(data => {
           tectonicLayer.addData(data);
