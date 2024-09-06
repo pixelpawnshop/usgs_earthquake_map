@@ -38,7 +38,6 @@ export function getMarkerStyle(magnitude, depth) {
 }
 
 // Function to filter earthquakes and update markers and heatmap
-// Function to filter earthquakes and update markers and heatmap
 export function filterEarthquakes(
   earthquakes,
   minMagnitude,
@@ -57,7 +56,6 @@ export function filterEarthquakes(
   const start = startDate ? new Date(startDate).getTime() : -Infinity;
   const end = endDate ? new Date(endDate).getTime() : Infinity;
 
-  // Filter earthquakes based on criteria
   const filtered = earthquakes.filter(eq =>
     (minMagnitude ? eq.magnitude >= minMagnitudeNum : true) &&
     (maxMagnitude ? eq.magnitude <= maxMagnitudeNum : true) &&
@@ -67,9 +65,8 @@ export function filterEarthquakes(
     (endDate ? new Date(eq.time).getTime() <= end : true)
   );
 
-  console.log('Filtered earthquakes:', filtered); // Debug log
+  console.log('Filtered earthquakes:', filtered);
 
-  // Update markers and heatmap
   if (markerClusterGroupRef.current) {
     markerClusterGroupRef.current.clearLayers();
     if (heatLayerRef.current) {
@@ -91,6 +88,7 @@ export function filterEarthquakes(
         `<b>${eq.magnitude} ${eq.title}</b><br/>
           Magnitude: ${eq.magnitude}<br/>
           Depth: ${eq.depth} km<br/>
+          Id: ${eq.id} km<br/>
           Time: ${new Date(eq.time).toLocaleString('en-US', {
           year: 'numeric',
           month: 'long',
@@ -107,25 +105,25 @@ export function filterEarthquakes(
         hoverDiv.style.display = 'block';
         hoverDiv.innerHTML = `<b>${eq.magnitude} ${eq.title}</b>`;
       })
-        .on('mouseout', function () {
-          const hoverDiv = document.querySelector('.leaflet-control-info');
-          hoverDiv.style.display = 'none';
-        });
+      .on('mouseout', function () {
+        const hoverDiv = document.querySelector('.leaflet-control-info');
+        hoverDiv.style.display = 'none';
+      });
 
       markerClusterGroupRef.current.addLayer(marker);
       heatmapData.push([eq.lat, eq.long, eq.magnitude]);
+
     });
 
     if (heatLayerRef.current) {
       heatLayerRef.current.setLatLngs(heatmapData);
-      console.log('Updated heatmap data:', heatmapData); // Debug log
+      console.log('Updated heatmap data:', heatmapData);
     }
   }
 
   // Return the filtered earthquakes
   return filtered;
 }
-
 
 export function createLegend() {
   const legend = L.control({ position: 'bottomright' });
@@ -151,61 +149,4 @@ export function createLegend() {
 
   return legend;
 }
-
-export async function fetchBuildingsInPolygon(polygon) {
-  try {
-    // Convert polygon coordinates to latitude longitude format with spaces
-    // Ensure latitude and longitude are correctly ordered
-    const coordinates = polygon.map(coord => `${coord[0]} ${coord[1]}`).join(' ');
-
-    // Construct the Overpass API query with proper formatting
-    const query = `[out:json];(node["building"](poly:"${coordinates}");way["building"](poly:"${coordinates}");relation["building"](poly:"${coordinates}"););out body; >; out skel qt;`;
-
-    // Debug output before encoding
-    console.log('Raw Query:', query);
-
-    // Encode the query using encodeURIComponent
-    // Preserve necessary characters
-    const encodedQuery = encodeURIComponent(query)
-      .replace(/%20/g, ' ')  // Spaces should be '%20'
-      .replace(/%3B/g, ';')  // Preserve semicolons
-      .replace(/%28/g, '(')  // Preserve opening parentheses
-      .replace(/%29/g, ')')  // Preserve closing parentheses
-      .replace(/%3A/g, ':')  // Preserve colons
-      .replace(/%3C/g, '<')  // Preserve '<'
-      .replace(/%3E/g, '>')  // Preserve '>'
-      .replace(/%5B/g, '[')  // Preserve '['
-      .replace(/%5D/g, ']'); // Preserve ']'
-
-    // Debug output after encoding
-    console.log('Encoded Query:', encodedQuery);
-
-    // Construct the final URL
-    const url = `https://overpass-api.de/api/interpreter?data=${encodedQuery}`;
-
-    // Debug output for final URL
-    console.log(`Fetching buildings with URL: ${url}`);
-
-    // Fetch data from Overpass API
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Overpass API request failed with status ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('Fetched data:', data);
-    return data;
-  } catch (error) {
-    console.error('Error fetching buildings:', error);
-    throw error;
-  }
-}
-
-
-
-
-
-
-
-
 

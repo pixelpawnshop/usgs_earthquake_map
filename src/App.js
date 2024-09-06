@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { initializeMap } from './map';
+import { initializeMap, openMarkerPopup } from './map';
 import Table from './Table';
 import './style.css';
-import { filterEarthquakes, fetchBuildingsInPolygon } from './functions';
+import { filterEarthquakes } from './functions';
+import { handlePolygonCreation } from './polygonHandler';
 import L from 'leaflet';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-draw';
@@ -63,29 +64,7 @@ function App() {
     updateTooltips();
 
     // Event listener for when a polygon is drawn
-    mapRef.current.on(L.Draw.Event.CREATED, async (e) => {
-      const type = e.layerType;
-      const layer = e.layer;
-
-      if (type === 'polygon') {
-        const latlngs = layer.getLatLngs()[0].map((latlng) => [latlng.lat, latlng.lng]);
-        console.log('Polygon coordinates:', latlngs); // Log coordinates
-
-        try {
-          console.log('Calling fetchBuildingsInPolygon...');
-          const buildings = await fetchBuildingsInPolygon(latlngs);
-          const buildingCount = buildings.elements.filter(element => element.type === 'way' && element.tags && element.tags.building).length;
-          console.log('Number of buildings found:', buildingCount); // Log number of buildings
-
-          layer.bindPopup(`Buildings within AOI: ${buildingCount}`).openPopup();
-        } catch (error) {
-          console.error('Error occurred while fetching building data:', error);
-          layer.bindPopup('Error fetching building data').openPopup();
-        }
-      }
-
-      drawnItems.addLayer(layer);
-    });
+    mapRef.current.on(L.Draw.Event.CREATED, (e) => handlePolygonCreation(e, drawnItems));
 
     return () => {
       if (mapRef.current) {
@@ -119,7 +98,13 @@ function App() {
     if (mapRef.current) {
       mapRef.current.setView([event.lat, event.long], 18);
     }
+    // Scroll to the top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    openMarkerPopup(event.id); // Ensure the event has a unique ID or marker ID to open the popup
+
   };
+  
 
   return (
     <div>

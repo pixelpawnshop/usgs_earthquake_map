@@ -4,6 +4,8 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
 import { createLegend, getMarkerStyle } from './functions';
+const markerMap = {};  // Add this line to store marker references
+
 
 export function initializeMap(mapId, setEarthquakes, setIsLoading, setMarkerClusterGroupRef, setHeatLayerRef) {
   const map = L.map(mapId, {
@@ -50,12 +52,13 @@ export function initializeMap(mapId, setEarthquakes, setIsLoading, setMarkerClus
     .then(response => response.json())
     .then(data => {
       const earthquakeData = data.features.map(feature => {
-        const { mag: magnitude, place: title, time } = feature.properties;
+        const { mag: magnitude, place: title, time} = feature.properties;
         const [long, lat, depthValue] = feature.geometry.coordinates;
         return {
           lat,
           long,
           magnitude,
+          id: feature.id,
           depth: depthValue,
           title,
           time
@@ -83,6 +86,7 @@ export function initializeMap(mapId, setEarthquakes, setIsLoading, setMarkerClus
           `<b>${eq.magnitude} ${eq.title}</b><br/>
             Magnitude: ${eq.magnitude}<br/>
             Depth: ${eq.depth} km<br/>
+            Id: ${eq.id}<br/>
             Time: ${new Date(eq.time).toLocaleString('en-US', {
             year: 'numeric',
             month: 'long',
@@ -93,7 +97,10 @@ export function initializeMap(mapId, setEarthquakes, setIsLoading, setMarkerClus
             timeZoneName: 'short'
           })}`
         );
-
+      
+        // Store marker in the map
+        markerMap[eq.id] = marker;
+      
         marker.on('mouseover', function () {
           const hoverDiv = document.querySelector('.leaflet-control-info');
           hoverDiv.style.display = 'block';
@@ -103,9 +110,9 @@ export function initializeMap(mapId, setEarthquakes, setIsLoading, setMarkerClus
           const hoverDiv = document.querySelector('.leaflet-control-info');
           hoverDiv.style.display = 'none';
         });
-
+      
         markerClusterGroup.addLayer(marker);
-      });
+      });      
 
       fetch('https://pixelpawnshop.github.io/earthquake_map/plates_boundaries.geojson')
         .then(response => response.json())
@@ -172,4 +179,12 @@ export function initializeMap(mapId, setEarthquakes, setIsLoading, setMarkerClus
   legend.addTo(map);
 
   return map;
+}
+
+// Function to open the popup of a marker by its ID
+export function openMarkerPopup(markerId) {
+  const marker = markerMap[markerId];
+  if (marker) {
+    marker.openPopup();
+  }
 }
